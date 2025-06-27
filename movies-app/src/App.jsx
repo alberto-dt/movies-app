@@ -4,6 +4,7 @@ import {Avatar, Card, Grid, Typography} from '@material-ui/core'
 import {useApiData} from './hooks/useApiData'
 import {DEFAULT_AVATAR, GRID_BREAKPOINTS} from "./utils/constants";
 import {generateMovieKey} from "./utils/helpers";
+import Loading from "./components/common/Loading/Loading";
 
 
 const App = () => {
@@ -17,14 +18,8 @@ const App = () => {
     }, [studios])
 
     if (loading) {
-        return (
-            <div className="App">
-                <Typography variant="h6" align="center">
-                    Loading movies and studios...
-                </Typography>
-            </div>
-        )
-  }
+        return <Loading message="Loading movies and studios..." />;
+    }
 
     return (
       <div className="App">

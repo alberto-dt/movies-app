@@ -18,3 +18,5 @@ Issues found
 7. Improve the App.jsx code to remove burned texts and leave the constants
 
 8. Create a utils folder in the root and create two files constants.js and helpers.js
+
+9. Improving the folder structure for components, we created a components folder
