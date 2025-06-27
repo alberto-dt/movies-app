@@ -41,4 +41,4 @@ app.post('/transfer', function (req, res) {
 
 // TODO: 2 Add logging capabilities into the movies-app
 
-app.listen(3000)
+app.listen(3001)
