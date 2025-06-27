@@ -1,0 +1,12 @@
+Issues found
+
+1. In the React project, the index.html file was in the wrong path.
+- A public folder was created.
+- The index.html file was moved to the public folder.
+
+2. Updated react-scripts => yarn add react-scripts@latest
+
+3. Changed the API port from 3000 to 3001 to avoid collisions with the front end.
+   The front end API port was also changed from 3000 to 3001 to maintain communication with the API.
+
+4. A .txt file was created with the name Issues.txt to record the log of how we are progressing and resolving the points
