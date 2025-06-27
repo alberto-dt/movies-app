@@ -14,3 +14,7 @@ Issues found
 5. Refactor the connection to the API to make it more optimized
 
 6. Improve the structure of App.jsx since it has an old structure for the reason refactor to a modern structure
+
+7. Improve the App.jsx code to remove burned texts and leave the constants
+
+8. Create a utils folder in the root and create two files constants.js and helpers.js

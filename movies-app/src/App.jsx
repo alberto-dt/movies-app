@@ -2,8 +2,9 @@ import './App.css'
 import React, {useMemo} from 'react'
 import {Avatar, Card, Grid, Typography} from '@material-ui/core'
 import {useApiData} from './hooks/useApiData'
+import {DEFAULT_AVATAR, GRID_BREAKPOINTS} from "./utils/constants";
+import {generateMovieKey} from "./utils/helpers";
 
-const defaultAvatar = 'https://image.shutterstock.com/image-vector/male-avatar-profile-picture-vector-600w-149083895.jpg'
 
 const App = () => {
     const {studios, movies, loading} = useApiData(true)
@@ -31,11 +32,11 @@ const App = () => {
           <h3>Images:</h3>
               <Grid container justifyContent="center" alignItems="center">
                   {movies.map(movie => (
-                      <Grid item xs={12} sm={6} lg={4} key={movie.id || `movie-${movie.name}-${movie.position}`}>
+                      <Grid item xs={GRID_BREAKPOINTS.xs} sm={GRID_BREAKPOINTS.sm} lg={GRID_BREAKPOINTS.lg} key={generateMovieKey(movie)}>
                           <Card className="regularCard">
                               <Avatar
                                   alt={movie.name}
-                                  src={movie.img || defaultAvatar}
+                                  src={movie.img || DEFAULT_AVATAR}
                                   style={{margin: 5, width: 280, height: 280}}
                               />
                               <div>
@@ -50,7 +51,7 @@ const App = () => {
                     </Typography>
                               </div>
                               <Typography>
-                                  {studiosMap[movie.studioId] || 'Studio no encontrado'}
+                                  {studiosMap[movie.studioId] || 'Studio not found'}
                               </Typography>
                 </Card>
                       </Grid>
