@@ -10,3 +10,7 @@ Issues found
    The front end API port was also changed from 3000 to 3001 to maintain communication with the API.
 
 4. A .txt file was created with the name Issues.txt to record the log of how we are progressing and resolving the points
+
+5. Refactor the connection to the API to make it more optimized
+
+6. Improve the structure of App.jsx since it has an old structure for the reason refactor to a modern structure
