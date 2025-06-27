@@ -1,0 +1,15 @@
+.moviesPage {
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.moviesContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 32px;
+    color: #333;
+}
