@@ -24,7 +24,7 @@ export class ApiClient {
             clearTimeout(timeoutId)
 
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+                console.log(`HTTP ${response.status}: ${response.statusText}`);
             }
 
             return await response.json()

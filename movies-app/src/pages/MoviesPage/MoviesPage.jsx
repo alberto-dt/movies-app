@@ -1,48 +1,78 @@
-import React, { useMemo } from 'react';
-import { Grid, Typography } from '@material-ui/core';
-import styles from './MoviesPage.module.css';
-import {useApiData} from "../../hooks/useApiData";
-import {createStudiosMap, generateMovieKey} from "../../utils/helpers";
-import Loading from "../../components/common/Loading/Loading";
-import {GRID_BREAKPOINTS} from "../../utils/constants";
-import MovieCard from "../../components/common/MovieCard/MovieCard";
+import React, { Suspense, lazy } from 'react'
+import styles from './styles/MoviesPage.module.css'
+import {useMoviesPage} from "@/hooks";
+import Loading from "@components/common/Loading/Loading";
+import MoviesHeader from "@pages/MoviesPage/components/MoviesHeader";
+import StatsSection from "@pages/MoviesPage/components/StatsSection";
+import MoviesGrid from "@pages/MoviesPage/components/MoviesGrid";
+
+const TransferDialog = lazy(() => import("@components/common/TransferDialog/TransferDialog"))
+const NotificationSnackbar = lazy(() => import("@components/common/NotificationSnackbar/NotificationSnackbar"))
 
 const MoviesPage = () => {
-    const { studios, movies, loading } = useApiData(true);
-
-    const studiosMap = useMemo(() => {
-        return createStudiosMap(studios);
-    }, [studios]);
+    const {
+        studios,
+        movies,
+        loading,
+        studiosMap,
+        showStats,
+        stats,
+        statsLoading,
+        handleStatsClick,
+        transferDialogOpen,
+        selectedMovie,
+        handleTransferMovie,
+        closeTransferDialog,
+        handleTransferSubmitWithErrorHandling,
+        notification,
+        hideNotification
+    } = useMoviesPage()
 
     if (loading) {
-        return <Loading message="Loading movies and studios..." />;
+        return <Loading message="Loading movies and studios..." />
     }
 
     return (
         <div className={styles.moviesPage}>
             <div className={styles.moviesContainer}>
-                <Typography variant="h4" component="h1" className={styles.title}>
-                    Movies Gallery
-                </Typography>
-                <Grid container justifyContent="center" alignItems="stretch">
-                    {movies.map(movie => (
-                        <Grid
-                            item
-                            xs={GRID_BREAKPOINTS.xs}
-                            sm={GRID_BREAKPOINTS.sm}
-                            lg={GRID_BREAKPOINTS.lg}
-                            key={generateMovieKey(movie)}
-                        >
-                            <MovieCard
-                                movie={movie}
-                                studioName={studiosMap[movie.studioId]}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
-            </div>
-        </div>
-    );
-};
+                <MoviesHeader
+                    onStatsClick={handleStatsClick}
+                    statsLoading={statsLoading}
+                    showStats={showStats}
+                />
 
-export default MoviesPage;
+                <StatsSection
+                    showStats={showStats}
+                    stats={stats}
+                />
+
+                <MoviesGrid
+                    movies={movies}
+                    studiosMap={studiosMap}
+                    onTransfer={handleTransferMovie}
+                />
+            </div>
+
+            <Suspense fallback={null}>
+                {transferDialogOpen && (
+                    <TransferDialog
+                        open={transferDialogOpen}
+                        movie={selectedMovie}
+                        studios={studios}
+                        onClose={closeTransferDialog}
+                        onSubmit={handleTransferSubmitWithErrorHandling}
+                    />
+                )}
+
+                {notification.open && (
+                    <NotificationSnackbar
+                        notification={notification}
+                        onClose={hideNotification}
+                    />
+                )}
+            </Suspense>
+        </div>
+    )
+}
+
+export default MoviesPage

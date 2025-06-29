@@ -1,4 +1,6 @@
 export const ENDPOINTS = {
     STUDIOS: '/studios',
-    MOVIES: '/movies'
+    MOVIES: '/movies',
+    STATS: '/stats',
+    TRANSFER: '/transfer'
 }

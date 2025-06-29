@@ -26,3 +26,15 @@ Issues found
 11. Create the pages folder to keep the project more organized and call the project from MoviesPage.jsx
 
 12. We refactored the App.jsx file so that it can be refactored to just call it the movie page.
+
+13. We refactor in the api folder exactly in the two files helpers.mjs and index.mjs
+
+14. Improve security vulnerabilities identified for this reason install these packages helmet, express-rate-limit
+
+15. Refactoring the index.mjs file to add the packages
+
+16. We improved the studio constants.msj structure so that it can display the images of the movies that were not seen.
+
+17. We created new folders, necessary files and improved the folder structure in the frontend to make it cleaner and easier to maintain.
+
+18. I install the craco package to be able to configure absolute routes with alias @

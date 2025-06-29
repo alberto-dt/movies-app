@@ -14,7 +14,9 @@
     "bunyan": "^1.8.12",
     "bunyan-format": "^0.2.1",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^8.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"

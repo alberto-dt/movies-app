@@ -1,0 +1,57 @@
+.statsCard {
+    margin: 8px;
+    background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+    color: white;
+}
+
+.studioCard {
+    margin: 8px;
+    min-height: 150px;
+}
+
+.statNumber {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.studioName {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.moviesList {
+    max-height: 100px;
+    overflow-y: auto;
+    margin-top: 8px;
+}
+
+.dashboardTitle {
+    margin-bottom: 16px;
+}
+
+.studiosSection {
+    margin-top: 24px;
+}
+
+.studiosBreadkownTitle {
+    margin-bottom: 16px;
+}
+
+.movieChip {
+    padding: 4px 8px;
+    background-color: #1976d2;
+    color: white;
+    display: inline-block;
+    font-size: 0.75rem;
+    border-radius: 16px;
+}
+
+.moviesTitle {
+    margin-top: 8px;
+}
+
+.movieItem {
+    margin-left: 8px;
+}
