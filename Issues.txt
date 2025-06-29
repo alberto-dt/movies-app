@@ -38,3 +38,5 @@ Issues found
 17. We created new folders, necessary files and improved the folder structure in the frontend to make it cleaner and easier to maintain.
 
 18. I install the craco package to be able to configure absolute routes with alias @
+
+19. Added filter by name, studio in the frontend and backend

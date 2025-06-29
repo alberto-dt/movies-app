@@ -1,0 +1,61 @@
+.filtersContainer {
+    margin-bottom: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filterIcon {
+    margin-right: 8px;
+    color: #1976d2;
+}
+
+.filterTitle {
+    font-weight: 600;
+    color: #333;
+}
+
+.resetButton {
+    min-width: 140px;
+}
+
+.accordionContent {
+    padding-top: 16px;
+}
+
+.priceSlider {
+    margin-top: 8px;
+}
+
+.activeFilters {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.filterChip {
+    margin: 2px;
+}
+
+.resultsCount {
+    font-weight: 500;
+    color: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+    .filtersContainer {
+        margin-bottom: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .filterTitle {
+        font-size: 1.1rem;
+    }
+
+    .resetButton {
+        min-width: 120px;
+        font-size: 0.875rem;
+    }
+}

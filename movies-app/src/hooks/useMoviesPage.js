@@ -1,6 +1,9 @@
 import { useMemo, useCallback } from 'react'
 import { createStudiosMap, createErrorMessage } from '@/utils'
-import { useApiData, useStats, useTransfer, useNotification } from './index'
+import { useApiData } from './useApiData'
+import { useStats } from './useStats'
+import { useTransfer } from './useTransfer'
+import { useNotification } from './useNotification'
 
 export const useMoviesPage = () => {
     const { studios, movies, loading, refreshData } = useApiData()

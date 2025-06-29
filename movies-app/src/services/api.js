@@ -1,5 +1,5 @@
 const API_CONFIG = {
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001',
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3002',
     timeout: 10000
 }
 
