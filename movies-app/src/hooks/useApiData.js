@@ -6,10 +6,8 @@ import {fetchMovieData} from "@hooks/apiOperations";
 export const useApiData = () => {
     const [state, setState] = useState(API_STATES.INITIAL)
     const isMountedRef = useRef(true)
-
     const loadData = useCallback(async () => {
         setState(API_STATES.LOADING)
-
         try {
             const { studios, movies } = await fetchMovieData()
             if (isMountedRef.current) {

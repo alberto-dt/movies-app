@@ -1,16 +1,15 @@
-// Mock data based on real backend structure
 export const movieAge = [
-    { movieId: '11', years: '19' },
+    { movieId: '11', years: 19 },
     { movieId: '12', years: 5 },
     { movieId: '13', years: 0 },
-    { movieId: '14', years: '9 goles' },
+    { movieId: '14', years: 9 },
     { movieId: '21', years: 35 },
-    { movieId: '22', years: ' 5' },
+    { movieId: '22', years: 5 },
     { movieId: '23', years: 0 },
-    { movieId: '24' }, // missing years
+    { movieId: '24' ,years: 0},
     { movieId: '31', years: 22 },
     { movieId: '32', years: 5 },
-    { movieId: '33', years: null },
+    { movieId: '33', years: 1 },
     { movieId: '34', years: 3 }
 ]
 
@@ -142,24 +141,20 @@ export const mockSony = {
     ]
 }
 
-// Array de studios para las respuestas de API
 export const mockStudios = [mockDisney, mockWarner, mockSony]
 
-// Array de todas las películas para las respuestas de API
 export const mockMovies = [
     ...mockDisney.movies,
     ...mockWarner.movies,
     ...mockSony.movies
 ]
 
-// Map de estudios por ID (igual que en el backend)
 export const studiosMap = {
     1: mockDisney,
     2: mockWarner,
     3: mockSony
 }
 
-// Géneros únicos extraídos de las películas
 export const mockGenres = Object.values(GENRE_STRING)
 
 export const mockFilterData = {
@@ -168,7 +163,6 @@ export const mockFilterData = {
     genres: mockGenres
 }
 
-// Stats calculadas basadas en datos reales
 export const mockStats = {
     totalMovies: mockMovies.length,
     totalStudios: mockStudios.length,
@@ -190,7 +184,6 @@ export const mockStats = {
     mostExpensiveMovie: mockMovies.reduce((max, movie) => movie.price > max.price ? movie : max)
 }
 
-// Helpers para crear respuestas de API
 export const createSuccessResponse = (data) => ({
     data,
     status: 200,
@@ -207,7 +200,6 @@ export const createErrorResponse = (message, status = 500) => {
     return error
 }
 
-// Mock de transferencia exitosa
 export const mockTransferSuccess = {
     success: true,
     message: 'Movie transferred successfully',
@@ -219,12 +211,10 @@ export const mockTransferSuccess = {
     }
 }
 
-// Helper para buscar película por ID
 export const findMovieById = (movieId) => {
     return mockMovies.find(movie => movie.id === movieId)
 }
 
-// Helper para buscar estudio por nombre
 export const findStudioByName = (studioName) => {
     return mockStudios.find(studio =>
         studio.name.toLowerCase().includes(studioName.toLowerCase()) ||
@@ -232,7 +222,6 @@ export const findStudioByName = (studioName) => {
     )
 }
 
-// Helper para filtrar películas
 export const filterMovies = (filters = {}) => {
     let filtered = [...mockMovies]
 

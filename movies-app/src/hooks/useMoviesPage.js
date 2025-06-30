@@ -4,7 +4,6 @@ import { useApiData } from './useApiData'
 import { useStats } from './useStats'
 import { useTransfer } from './useTransfer'
 import { useNotification } from './useNotification'
-
 export const useMoviesPage = () => {
     const { studios, movies, loading, refreshData } = useApiData()
     const { notification, showNotification, hideNotification } = useNotification()
@@ -20,7 +19,6 @@ export const useMoviesPage = () => {
     const studiosMap = useMemo(() =>
         createStudiosMap(studios || []), [studios]
     )
-
     const handleStatsClick = useCallback(async () => {
         try {
             await handleShowStats()
@@ -28,7 +26,6 @@ export const useMoviesPage = () => {
             showNotification(error.message, 'error')
         }
     }, [handleShowStats, showNotification])
-
     const handleTransferSubmitWithErrorHandling = useCallback(async (transferData) => {
         try {
             const message = await handleTransferSubmit(transferData)

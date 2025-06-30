@@ -31,7 +31,6 @@ const MoviesPage = () => {
         hideNotification
     } = useMoviesPage()
 
-    // Hook de filtros con soporte para backend
     const {
         filters,
         filteredMovies,

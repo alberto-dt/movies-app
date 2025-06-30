@@ -5,17 +5,14 @@ import {
     mockFilterData,
     mockStats,
     mockTransferSuccess,
-    filterMovies,
     findStudioByName,
     GENRE_ID,
     GENRE_STRING
 } from './mockData'
 
-// Base URL - ajusta según tu configuración
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api'
 
 export const handlers = [
-    // GET /studios
     rest.get(`${API_BASE_URL}/studios`, (req, res, ctx) => {
         return res(
             ctx.status(200),
@@ -23,24 +20,20 @@ export const handlers = [
         )
     }),
 
-    // GET /movies
     rest.get(`${API_BASE_URL}/movies`, (req, res, ctx) => {
         const title = req.url.searchParams.get('title')
         const studio = req.url.searchParams.get('studio')
         const minPrice = req.url.searchParams.get('minPrice')
         const maxPrice = req.url.searchParams.get('maxPrice')
-        const genre = req.url.searchParams.get('genre')
-
+        req.url.searchParams.get('genre');
         let filteredMovies = [...mockMovies]
 
-        // Filtrar por título (busca en el campo 'name')
         if (title) {
             filteredMovies = filteredMovies.filter(movie =>
                 movie.name.toLowerCase().includes(title.toLowerCase())
             )
         }
 
-        // Filtrar por estudio
         if (studio) {
             const targetStudio = findStudioByName(studio)
             if (targetStudio) {
@@ -50,22 +43,13 @@ export const handlers = [
             }
         }
 
-        // Filtrar por género
-        if (genre) {
-            const genreId = parseInt(genre)
-            filteredMovies = filteredMovies.filter(movie =>
-                movie.genre === genreId
-            )
-        }
 
-        // Filtrar por precio mínimo
         if (minPrice) {
             filteredMovies = filteredMovies.filter(movie =>
                 movie.price >= parseInt(minPrice)
             )
         }
 
-        // Filtrar por precio máximo
         if (maxPrice) {
             filteredMovies = filteredMovies.filter(movie =>
                 movie.price <= parseInt(maxPrice)
@@ -78,7 +62,6 @@ export const handlers = [
         )
     }),
 
-    // GET /filter-data
     rest.get(`${API_BASE_URL}/filter-data`, (req, res, ctx) => {
         return res(
             ctx.status(200),
@@ -86,7 +69,6 @@ export const handlers = [
         )
     }),
 
-    // GET /stats
     rest.get(`${API_BASE_URL}/stats`, (req, res, ctx) => {
         return res(
             ctx.status(200),
@@ -94,11 +76,9 @@ export const handlers = [
         )
     }),
 
-    // POST /transfer
     rest.post(`${API_BASE_URL}/transfer`, async (req, res, ctx) => {
         const { movieId, fromStudio, toStudio } = await req.json()
 
-        // Validaciones básicas
         if (!movieId || !fromStudio || !toStudio) {
             return res(
                 ctx.status(400),
@@ -109,7 +89,6 @@ export const handlers = [
             )
         }
 
-        // Verificar que la película existe
         const movie = mockMovies.find(m => m.id === movieId)
         if (!movie) {
             return res(
@@ -121,7 +100,6 @@ export const handlers = [
             )
         }
 
-        // Verificar que los estudios existen
         const sourceStudio = findStudioByName(fromStudio)
         const targetStudio = findStudioByName(toStudio)
 
@@ -145,7 +123,6 @@ export const handlers = [
             )
         }
 
-        // Verificar que la película pertenece al estudio de origen
         const movieInStudio = sourceStudio.movies.find(m => m.id === movieId)
         if (!movieInStudio) {
             return res(
@@ -157,7 +134,6 @@ export const handlers = [
             )
         }
 
-        // Simular transferencia exitosa
         return res(
             ctx.status(200),
             ctx.json({
@@ -174,7 +150,6 @@ export const handlers = [
         )
     }),
 
-    // GET /movies/:id - obtener película específica
     rest.get(`${API_BASE_URL}/movies/:id`, (req, res, ctx) => {
         const { id } = req.params
         const movie = mockMovies.find(m => m.id === id)
@@ -192,7 +167,6 @@ export const handlers = [
         )
     }),
 
-    // GET /studios/:id - obtener estudio específico
     rest.get(`${API_BASE_URL}/studios/:id`, (req, res, ctx) => {
         const { id } = req.params
         const studio = mockStudios.find(s => s.id === id)
@@ -210,7 +184,6 @@ export const handlers = [
         )
     }),
 
-    // GET /genres - obtener géneros disponibles
     rest.get(`${API_BASE_URL}/genres`, (req, res, ctx) => {
         return res(
             ctx.status(200),
@@ -222,9 +195,7 @@ export const handlers = [
         )
     }),
 
-    // Handlers para errores específicos (útiles para testing)
 
-    // Error en studios
     rest.get(`${API_BASE_URL}/studios/error`, (req, res, ctx) => {
         return res(
             ctx.status(500),
@@ -232,7 +203,6 @@ export const handlers = [
         )
     }),
 
-    // Error en movies
     rest.get(`${API_BASE_URL}/movies/error`, (req, res, ctx) => {
         return res(
             ctx.status(404),
@@ -240,7 +210,6 @@ export const handlers = [
         )
     }),
 
-    // Error en filter-data (para testing del fallback)
     rest.get(`${API_BASE_URL}/filter-data/error`, (req, res, ctx) => {
         return res(
             ctx.status(503),
@@ -248,7 +217,6 @@ export const handlers = [
         )
     }),
 
-    // Error en transferencia - estudio de origen sin suficiente dinero
     rest.post(`${API_BASE_URL}/transfer/insufficient-funds`, async (req, res, ctx) => {
         return res(
             ctx.status(400),
@@ -259,42 +227,31 @@ export const handlers = [
         )
     })
 ]
+rest.get(`${API_BASE_URL}/studios`, (req, res, ctx) => {
+    return res(ctx.status(500), ctx.json({ message: 'Server error' }))
+});
+rest.get(`${API_BASE_URL}/movies`, (req, res, ctx) => {
+    return res(ctx.status(500), ctx.json({ message: 'Server error' }))
+});
+rest.get(`${API_BASE_URL}/filter-data`, (req, res, ctx) => {
+    return res(ctx.status(503), ctx.json({ message: 'Service unavailable' }))
+});
+rest.post(`${API_BASE_URL}/transfer`, (req, res, ctx) => {
+    return res(ctx.status(500), ctx.json({ message: 'Transfer failed' }))
+});
 
-// Handlers específicos para testing de errores
-export const errorHandlers = [
-    rest.get(`${API_BASE_URL}/studios`, (req, res, ctx) => {
-        return res(ctx.status(500), ctx.json({ message: 'Server error' }))
-    }),
-    rest.get(`${API_BASE_URL}/movies`, (req, res, ctx) => {
-        return res(ctx.status(500), ctx.json({ message: 'Server error' }))
-    }),
-    rest.get(`${API_BASE_URL}/filter-data`, (req, res, ctx) => {
-        return res(ctx.status(503), ctx.json({ message: 'Service unavailable' }))
-    }),
-    rest.post(`${API_BASE_URL}/transfer`, (req, res, ctx) => {
-        return res(ctx.status(500), ctx.json({ message: 'Transfer failed' }))
-    })
-]
-
-// Handlers para casos específicos de testing
-export const customHandlers = {
-    // Para probar películas con precios extremos
-    expensiveMoviesHandler: rest.get(`${API_BASE_URL}/movies/expensive`, (req, res, ctx) => {
-        const expensiveMovies = mockMovies.filter(movie => movie.price >= 1000000000)
-        return res(ctx.status(200), ctx.json(expensiveMovies))
-    }),
-
-    // Para probar datos inconsistentes
-    inconsistentDataHandler: rest.get(`${API_BASE_URL}/filter-data/inconsistent`, (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json({
-            studios: mockStudios,
-            movies: null, // Datos inconsistentes
-            genres: undefined
-        }))
-    }),
-
-    // Para probar timeout
-    timeoutHandler: rest.get(`${API_BASE_URL}/movies/timeout`, (req, res, ctx) => {
-        return res(ctx.delay(30000)) // Delay de 30 segundos
-    })
-}
+rest.get(`${API_BASE_URL}/movies
+/expensive`, (req, res, ctx) => {
+    const expensiveMovies = mockMovies.filter(movie => movie.price >= 1000000000)
+    return res(ctx.status(200), ctx.json(expensiveMovies))
+});
+rest.get(`${API_BASE_URL}/filter-data/inconsistent`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({
+        studios: mockStudios,
+        movies: null,
+        genres: undefined
+    }))
+});
+rest.get(`${API_BASE_URL}/movies/timeout`, (req, res, ctx) => {
+    return res(ctx.delay(30000))
+});

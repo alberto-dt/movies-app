@@ -16,7 +16,7 @@ class Logger {
     formatMessage(level, message, context = {}) {
         const timestamp = new Date().toISOString();
         const contextStr = Object.keys(context).length > 0 ?
-            ` | Contexto: ${JSON.stringify(context)}` : '';
+            ` | Context: ${JSON.stringify(context)}` : '';
 
         return `[${timestamp}] [${level.toUpperCase()}] ${message}${contextStr}`;
     }
@@ -55,11 +55,11 @@ class Logger {
 
     logRequest(req, res, duration) {
         const logData = {
-            método: req.method,
+            method: req.method,
             url: req.url,
             ip: req.ip || req.connection.remoteAddress,
             userAgent: req.get('User-Agent'),
-            duración: `${duration}ms`,
+            duration: `${duration}ms`,
             status: res.statusCode
         };
 

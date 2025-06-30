@@ -5,7 +5,6 @@ const INITIAL_FILTERS = {
     title: '',
     studio: ''
 }
-
 export const useMovieFilters = (movies = [], useBackendFiltering = false) => {
     const [filters, setFilters] = useState(INITIAL_FILTERS)
     const [backendResults, setBackendResults] = useState([])

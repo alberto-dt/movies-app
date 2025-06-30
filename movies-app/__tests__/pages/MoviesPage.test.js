@@ -6,12 +6,10 @@ import { useMoviesPage } from '@hooks/useMoviesPage'
 import { useMovieFilters } from '@hooks/useMovieFilters'
 import { movieApi } from '@services/movieApi'
 
-// Mock de todos los hooks y dependencias
 jest.mock('@hooks/useMoviesPage')
 jest.mock('@hooks/useMovieFilters')
 jest.mock('@services/movieApi')
 
-// Mock de los componentes lazy
 jest.mock('@components/common/TransferDialog/TransferDialog', () => {
     return function MockTransferDialog({ open, movie, studios, onClose, onSubmit }) {
         if (!open) return null
@@ -41,7 +39,6 @@ jest.mock('@components/common/NotificationSnackbar/NotificationSnackbar', () => 
     }
 })
 
-// Mock de componentes regulares
 jest.mock('@components/common/Loading/Loading', () => {
     return function MockLoading({ message }) {
         return <div data-testid="loading">{message}</div>
@@ -50,8 +47,6 @@ jest.mock('@components/common/Loading/Loading', () => {
 
 jest.mock('@components/common/MovieFilters/MovieFilters', () => {
     return function MockMovieFilters({
-                                         filters,
-                                         filterOptions,
                                          onUpdateFilter,
                                          onUpdatePriceRange,
                                          onResetFilters,
@@ -116,14 +111,12 @@ jest.mock('@pages/MoviesPage/components/MoviesGrid', () => {
     }
 })
 
-// Mock de estilos CSS modules
 jest.mock('@pages/MoviesPage/styles/MoviesPage.module.css', () => ({
     moviesPage: 'moviesPage',
     moviesContainer: 'moviesContainer'
 }))
 
 describe('MoviesPage', () => {
-    // Datos mock
     const mockMovies = [
         { id: '11', name: 'Nightmare before christmas', genre: 6, price: 600 },
         { id: '12', name: 'Aladdin', genre: 4, price: 10000000000 }
@@ -145,7 +138,6 @@ describe('MoviesPage', () => {
         averagePrice: 2167167167.25
     }
 
-    // Mock por defecto de useMoviesPage
     const defaultUseMoviesPageMock = {
         studios: mockStudios,
         movies: mockMovies,
@@ -164,7 +156,6 @@ describe('MoviesPage', () => {
         hideNotification: jest.fn()
     }
 
-    // Mock por defecto de useMovieFilters
     const defaultUseMovieFiltersMock = {
         filters: {},
         filteredMovies: mockMovies,
@@ -253,7 +244,6 @@ describe('MoviesPage', () => {
             const header = screen.getByTestId('movies-header')
             expect(header).toBeInTheDocument()
 
-            // Verificar que el botón existe y no está deshabilitado
             const statsButton = screen.getByRole('button', { name: /show stats/i })
             expect(statsButton).not.toBeDisabled()
         })
@@ -526,7 +516,6 @@ describe('MoviesPage', () => {
 
             render(<MoviesPage />)
 
-            // Esperar a que se ejecute el efecto con timeout
             await waitFor(() => {
                 expect(movieApi.searchMoviesWithFilters).toHaveBeenCalledWith({ title: 'test' })
             }, { timeout: 500 })
@@ -601,10 +590,9 @@ describe('MoviesPage', () => {
         it('should handle movies array changes', () => {
             const { rerender } = render(<MoviesPage />)
 
-            // Cambiar los datos de películas
             useMoviesPage.mockReturnValue({
                 ...defaultUseMoviesPageMock,
-                movies: [mockMovies[0]] // Solo una película
+                movies: [mockMovies[0]]
             })
 
             useMovieFilters.mockReturnValue({

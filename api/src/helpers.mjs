@@ -49,11 +49,6 @@ export const movieConstructor = (movie, studio) => {
     processedMovie.price = generateRealisticPrice();
   }
 
-  const unwantedProperties = ['position'];
-  unwantedProperties.forEach(prop => {
-    delete processedMovie[prop];
-  });
-
   return processedMovie;
 };
 

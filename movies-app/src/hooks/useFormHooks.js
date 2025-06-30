@@ -41,7 +41,6 @@ export const useFormState = () => {
         initializeFromStudio
     }
 }
-
 export const useFormInitialization = (open, movie, studios, formActions) => {
     const { resetForm, initializeFromStudio } = formActions
 
@@ -54,7 +53,6 @@ export const useFormInitialization = (open, movie, studios, formActions) => {
         }
     }, [open, movie, studios, resetForm, initializeFromStudio])
 }
-
 export const useFormSubmission = (movie, fromStudio, toStudio, onSubmit, setError) => {
     return useCallback(() => {
         setError('')

@@ -10,7 +10,6 @@ import { requestLoggingMiddleware, errorLoggingMiddleware } from './middleware/l
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-// Log de inicio de aplicación
 logger.info('Iniciando servidor de Movies App', {
   puerto: PORT,
   entorno: process.env.NODE_ENV || 'development',
@@ -24,14 +23,14 @@ const limiter = rateLimit({
   max:100,
   message: 'Too many requests, please try again later.',
   handler: (req, res) => {
-    logger.warn('Rate limit excedido', {
+    logger.warn('Rate limit exceeded', {
       ip: req.ip,
       url: req.url,
       userAgent: req.get('User-Agent')
     });
     res.status(429).json({
       success: false,
-      error: 'Demasiadas solicitudes, intente más tarde.'
+      error: 'Too many requests, please try again later.'
     });
   }
 });
@@ -46,7 +45,6 @@ app.use(cors({
 app.use(express.json({limit:'10mb'}));
 app.use(express.urlencoded({extended: true, limit:'10mb'}));
 
-// Reemplazar el middleware básico con el middleware de logging
 app.use(requestLoggingMiddleware);
 
 let studiosCache = null;
@@ -57,9 +55,9 @@ const CACHE_DURATION = 5 * 60 * 1000;
 
 const isCacheValid = () => {
   const isValid = cacheTime && (Date.now() - cacheTime) < CACHE_DURATION;
-  logger.debug('Validación de cache', {
-    esVálido: isValid,
-    edadCache: Date.now() - cacheTime
+  logger.debug('Cache validation', {
+    isValid: isValid,
+    timeCache: Date.now() - cacheTime
   });
   return isValid;
 };
@@ -68,7 +66,7 @@ const refreshCache = () => {
   const startTime = Date.now();
 
   try {
-    logger.info('Refrescando cache de datos');
+    logger.info('Refreshing data cache');
 
     studiosCache = [disney, warner, sony].map(studio => {
       const { movies, ...studioWithoutMovies } = studio;
@@ -80,30 +78,30 @@ const refreshCache = () => {
     cacheTime = Date.now();
 
     const duration = Date.now() - startTime;
-    logger.logCache('refrescado', {
-      duración: duration,
-      películas: moviesCache.length,
-      estudios: studiosCache.length,
-      géneros: filterDataCache.genres.length
+    logger.logCache('refreshed', {
+      duration: duration,
+      movies: moviesCache.length,
+      studies: studiosCache.length,
+      genres: filterDataCache.genres.length
     });
 
-    logger.info('Cache refrescado exitosamente', {
-      películasTotal: moviesCache.length,
-      estudiosTotal: studiosCache.length
+    logger.info('Cache refreshed successfully', {
+      moviesTotal: moviesCache.length,
+      studiesTotal: studiosCache.length
     });
 
   } catch (error) {
-    logger.error('Error al refrescar cache', error);
+    logger.error('Error refreshing cache', error);
     throw error;
   }
 };
 
 const getCachedData = (type) => {
   if (!isCacheValid()) {
-    logger.debug('Cache inválido, refrescando');
+    logger.debug('Invalid cache, refreshing');
     refreshCache();
   } else {
-    logger.logCache('hit', { tipo: type });
+    logger.logCache('hit', { type: type });
   }
 
   switch (type) {
@@ -114,7 +112,7 @@ const getCachedData = (type) => {
     case 'filterData':
       return filterDataCache;
     default:
-      logger.warn('Tipo de cache desconocido solicitado', { tipo: type });
+      logger.warn('Unknown cache type requested', { type: type });
       return null;
   }
 };
@@ -124,7 +122,7 @@ const asyncHandler = (fn) => (req, res, next) => {
 };
 
 app.get('/studios', asyncHandler(async (req, res) => {
-  logger.debug('Solicitando lista de estudios');
+  logger.debug('requesting list of studies');
   const studios = getCachedData('studios');
 
   res.json({
@@ -135,7 +133,7 @@ app.get('/studios', asyncHandler(async (req, res) => {
 }));
 
 app.get('/movies', asyncHandler(async (req, res) => {
-  logger.debug('Solicitando lista de películas', {
+  logger.debug('Requesting movie list', {
     filtros: req.query
   });
 
@@ -148,9 +146,9 @@ app.get('/movies', asyncHandler(async (req, res) => {
         (movie.title && movie.title.toLowerCase().includes(titleQuery)) ||
         (movie.name && movie.name.toLowerCase().includes(titleQuery))
     );
-    logger.debug('Filtro por título aplicado', {
-      título: req.query.title,
-      resultados: filteredMovies.length
+    logger.debug('Filter by title applied', {
+      title: req.query.title,
+      results: filteredMovies.length
     });
   }
 
@@ -161,9 +159,9 @@ app.get('/movies', asyncHandler(async (req, res) => {
       const studioId = movie.studioId?.toString().toLowerCase() || '';
       return studioName.includes(studioQuery) || studioId === studioQuery;
     });
-    logger.debug('Filtro por estudio aplicado', {
-      estudio: req.query.studio,
-      resultados: filteredMovies.length
+    logger.debug('Filter by applied study', {
+      studio: req.query.studio,
+      results: filteredMovies.length
     });
   }
 
@@ -176,17 +174,17 @@ app.get('/movies', asyncHandler(async (req, res) => {
       return price >= minPrice && price <= maxPrice;
     });
 
-    logger.debug('Filtro por precio aplicado', {
-      precioMín: minPrice,
-      precioMáx: maxPrice,
-      resultados: filteredMovies.length
+    logger.debug('Filter by applied price', {
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      results: filteredMovies.length
     });
   }
 
-  logger.info('Consulta de películas completada', {
-    totalOriginal: originalCount,
-    totalFiltrado: filteredMovies.length,
-    filtrosAplicados: Object.keys(req.query).length
+  logger.info('Movie query completed', {
+    originalCount: originalCount,
+    totalFiltered: filteredMovies.length,
+    filtersApplied: Object.keys(req.query).length
   });
 
   res.json({
@@ -198,7 +196,7 @@ app.get('/movies', asyncHandler(async (req, res) => {
 }));
 
 app.get('/genres', asyncHandler(async (req, res) => {
-  logger.debug('Solicitando lista de géneros');
+  logger.debug('Requesting list of genres');
   const filterData = getCachedData('filterData');
 
   res.json({
@@ -209,7 +207,7 @@ app.get('/genres', asyncHandler(async (req, res) => {
 }));
 
 app.get('/filter-data', asyncHandler(async (req, res) => {
-  logger.debug('Solicitando datos de filtros');
+  logger.debug('Requesting filter data');
   const filterData = getCachedData('filterData');
 
   res.json({
@@ -219,7 +217,7 @@ app.get('/filter-data', asyncHandler(async (req, res) => {
 }));
 
 app.get('/movieAge', asyncHandler(async (req, res) => {
-  logger.debug('Solicitando datos de edad de películas');
+  logger.debug('Requesting age data for films');
   res.json({
     success: true,
     data: movieAge
@@ -229,16 +227,16 @@ app.get('/movieAge', asyncHandler(async (req, res) => {
 app.post('/transfer', asyncHandler(async (req, res) => {
   const { movieId, fromStudio, toStudio } = req.body;
 
-  logger.info('Solicitud de transferencia recibida', {
-    película: movieId,
-    origen: fromStudio,
-    destino: toStudio,
+  logger.info('Transfer request received', {
+    movie: movieId,
+    fromStudio: fromStudio,
+    toStudio: toStudio,
     ip: req.ip
   });
 
   if (!movieId || !fromStudio || !toStudio) {
-    logger.warn('Transferencia rechazada: parámetros faltantes', {
-      recibido: req.body
+    logger.warn('Transfer rejected: missing parameters', {
+      received: req.body
     });
     return res.status(400).json({
       success: false,
@@ -248,9 +246,9 @@ app.post('/transfer', asyncHandler(async (req, res) => {
   }
 
   if (fromStudio === toStudio) {
-    logger.warn('Transferencia rechazada: mismo estudio', {
-      película: movieId,
-      estudio: fromStudio
+    logger.warn('Transfer rejected: same study', {
+      movie: movieId,
+      studio: fromStudio
     });
     return res.status(400).json({
       success: false,
@@ -268,9 +266,9 @@ app.post('/transfer', asyncHandler(async (req, res) => {
   const toStudioObj = studioMap[toStudio.toLowerCase()];
 
   if (!fromStudioObj) {
-    logger.error('Estudio origen inválido', {
-      estudioSolicitado: fromStudio,
-      estudiosDisponibles: Object.keys(studioMap)
+    logger.error('Invalid origin study', {
+      fromStudio: fromStudio,
+      availableStudies: Object.keys(studioMap)
     });
     return res.status(400).json({
       success: false,
@@ -279,9 +277,9 @@ app.post('/transfer', asyncHandler(async (req, res) => {
   }
 
   if (!toStudioObj) {
-    logger.error('Estudio destino inválido', {
-      estudioSolicitado: toStudio,
-      estudiosDisponibles: Object.keys(studioMap)
+    logger.error('Invalid destination study', {
+      fromStudio: toStudio,
+      availableStudies: Object.keys(studioMap)
     });
     return res.status(400).json({
       success: false,
@@ -297,13 +295,12 @@ app.post('/transfer', asyncHandler(async (req, res) => {
   );
 
   if (result.success) {
-    // Invalidar cache
     studiosCache = null;
     moviesCache = null;
     filterDataCache = null;
     cacheTime = 0;
 
-    logger.logCache('invalidado', { razón: 'transferencia exitosa' });
+    logger.logCache('invalidated', { reason: 'successful transfer' });
 
     res.json({
       success: true,
@@ -315,8 +312,8 @@ app.post('/transfer', asyncHandler(async (req, res) => {
       }
     });
   } else {
-    logger.error('Transferencia fallida', null, {
-      película: movieId,
+    logger.error('Failed transfer', null, {
+      movie: movieId,
       error: result.error
     });
     res.status(400).json({
@@ -327,7 +324,7 @@ app.post('/transfer', asyncHandler(async (req, res) => {
 }));
 
 app.get('/stats', asyncHandler(async (req, res) => {
-  logger.debug('Solicitando estadísticas de películas');
+  logger.debug('Requesting movie statistics');
   const stats = getMovieStats([disney, warner, sony]);
 
   res.json({
@@ -338,22 +335,22 @@ app.get('/stats', asyncHandler(async (req, res) => {
 
 app.get('/movies/:id', asyncHandler(async (req, res) => {
   const movieId = req.params.id;
-  logger.debug('Buscando película por ID', { películaId: movieId });
+  logger.debug('Searching for movie by ID', { movieId: movieId });
 
   const movies = getCachedData('movies');
   const foundMovie = movies.find(movie => movie.id === movieId);
 
   if (!foundMovie) {
-    logger.warn('Película no encontrada', { películaId: movieId });
+    logger.warn('Movie not found', { movieId: movieId });
     return res.status(404).json({
       success: false,
       error: `Movie with ID ${movieId} not found`
     });
   }
 
-  logger.info('Película encontrada', {
-    películaId: movieId,
-    nombre: foundMovie.name
+  logger.info('Movie found', {
+    movieId: movieId,
+    name: foundMovie.name
   });
 
   res.json({
@@ -363,7 +360,7 @@ app.get('/movies/:id', asyncHandler(async (req, res) => {
 }));
 
 app.get('/health', (req, res) => {
-  logger.debug('Health check solicitado');
+  logger.debug('Health check requested');
   const filterData = getCachedData('filterData');
 
   const healthData = {
@@ -381,21 +378,20 @@ app.get('/health', (req, res) => {
     }
   };
 
-  logger.info('Health check completado', healthData.cache);
+  logger.info('Health check completed', healthData.cache);
   res.json(healthData);
 });
 
-// Ruta 404
 app.use((req, res) => {
-  logger.warn('Ruta no encontrada', {
+  logger.warn('Route not found', {
     url: req.originalUrl,
-    método: req.method,
+    method: req.method,
     ip: req.ip
   });
 
   res.status(404).json({
     success: false,
-    error: `Ruta ${req.originalUrl} no encontrada`,
+    error: `Route ${req.originalUrl} not found`,
     availableRoutes: [
       'GET /studios',
       'GET /movies',
@@ -410,40 +406,37 @@ app.use((req, res) => {
   });
 });
 
-// Middleware de manejo de errores (debe ir al final)
 app.use(errorLoggingMiddleware);
 
-// Graceful shutdown
 const gracefulShutdown = () => {
-  logger.info('Cerrando servidor Movies App gracefully');
+  logger.info('Closing Movies App server gracefully');
   process.exit(0);
 };
 
 process.on('SIGTERM', () => {
-  logger.info('Señal SIGTERM recibida');
+  logger.info('SIGTERM signal received');
   gracefulShutdown();
 });
 
 process.on('SIGINT', () => {
-  logger.info('Señal SIGINT recibida');
+  logger.info('SIGINT signal received');
   gracefulShutdown();
 });
 
-// Manejar errores no capturados
 process.on('uncaughtException', (error) => {
-  logger.error('Excepción no capturada', error);
+  logger.error('Uncaught exception', error);
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Promise rejection no manejada', new Error(reason), {
+  logger.error('Promise rejection not handled', new Error(reason), {
     promise: promise.toString()
   });
 });
 
 app.listen(PORT, () => {
   refreshCache();
-  logger.info(`Servidor Movies App iniciado exitosamente en puerto ${PORT}`, {
+  logger.info(`Movies App server successfully started on port ${PORT}`, {
     entorno: process.env.NODE_ENV || 'development',
     pid: process.pid
   });

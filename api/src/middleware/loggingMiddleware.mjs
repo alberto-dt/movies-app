@@ -3,7 +3,7 @@ import logger from '../utils/logger.mjs';
 export const requestLoggingMiddleware = (req, res, next) => {
     const startTime = Date.now();
 
-    logger.debug(`Iniciando request: ${req.method} ${req.url}`, {
+    logger.debug(`Starting request: ${req.method} ${req.url}`, {
         ip: req.ip || req.connection.remoteAddress,
         userAgent: req.get('User-Agent')
     });
@@ -14,9 +14,9 @@ export const requestLoggingMiddleware = (req, res, next) => {
         logger.logRequest(req, res, duration);
 
         if (duration > 2000) {
-            logger.warn(`Respuesta lenta detectada: ${req.method} ${req.url}`, {
-                duración: duration,
-                tamaño: data ? data.length : 0
+            logger.warn(`Slow response detected: ${req.method} ${req.url}`, {
+                duration: duration,
+                size: data ? data.length : 0
             });
         }
 

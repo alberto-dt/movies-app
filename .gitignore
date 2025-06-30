@@ -1,3 +1,5 @@
 .idea
 /movies-app/node_modules
 /api/node_modules
+/api/logs
+/movies-app/coverage

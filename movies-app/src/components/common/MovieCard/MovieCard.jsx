@@ -25,7 +25,7 @@ const MovieCard = ({movie, studioName, onTransfer}) => {
                     )}
                 </Typography>
                 <Typography className={styles.studioName}>
-                    {studioName || 'Studio no encontrado'}
+                    {studioName || 'Studio not found'}
                 </Typography>
 
                 {movie.id && (

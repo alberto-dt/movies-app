@@ -1,7 +1,7 @@
 export const movieAge = [
     {
         movieId: '11',
-        years: '19',
+        years: 19,
     },
     {
         movieId: '12',
@@ -13,7 +13,7 @@ export const movieAge = [
     },
     {
         movieId: '14',
-        years: '9 goles',
+        years: 9,
     },
     {
         movieId: '21',
@@ -21,7 +21,7 @@ export const movieAge = [
     },
     {
         movieId: '22',
-        years: ' 5',
+        years: 5,
     },
     {
         movieId: '23',
@@ -29,6 +29,7 @@ export const movieAge = [
     },
     {
         movieId: '24',
+        years: 0,
     },
     {
         movieId: '31',
@@ -40,7 +41,7 @@ export const movieAge = [
     },
     {
         movieId: '33',
-        years: null,
+        years: 1,
     },
     {
         movieId: '34',
