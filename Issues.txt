@@ -42,3 +42,5 @@ Issues found
 19. Added filter by name, studio in the frontend and backend
 
 20. Setting up the environment for unit testing and also adding mock, utils, unit, services and pages tests with your setup.js
+
+21. We add the loggers in the backend
