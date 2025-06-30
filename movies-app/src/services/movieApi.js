@@ -28,7 +28,8 @@ export const movieApi = {
         } catch (error) {
             console.warn('Filter data endpoint not available, fetching separately')
 
-            const [studiosResponse, moviesResponse, genresResponse] = await Promise.allSettled([
+            // ✅ CORREGIR: Solo hacer 2 llamadas ya que no tienes endpoint para genres
+            const [studiosResponse, moviesResponse] = await Promise.allSettled([
                 this.getStudios(),
                 this.getMovies()
             ])
@@ -36,7 +37,7 @@ export const movieApi = {
             return {
                 studios: studiosResponse.status === 'fulfilled' ? studiosResponse.value : [],
                 movies: moviesResponse.status === 'fulfilled' ? moviesResponse.value : [],
-                genres: genresResponse.status === 'fulfilled' ? genresResponse.value : []
+                genres: [] // ✅ Valor por defecto ya que no tienes endpoint para genres
             }
         }
     },
